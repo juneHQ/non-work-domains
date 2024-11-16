@@ -1,0 +1,10 @@
+#!/bin/bash
+
+dos2unix data/domains.txt 2>/dev/null || true
+
+sort -u data/domains.txt > data/domains_sorted.txt
+
+sed -i '' '/^[[:space:]]*$/d' data/domains_sorted.txt
+sed -i '' 's/^[[:space:]]*//;s/[[:space:]]*$//' data/domains_sorted.txt
+
+mv data/domains_sorted.txt data/domains.txt

@@ -1,0 +1,23 @@
+name: Check Domain List Formatting
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - '**'
+
+jobs:
+  check-formatting:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      
+      - name: Make scripts executable
+        run: chmod +x scripts/check_domains
+      
+      - name: Check domains formatting
+        run: ./scripts/check_domains
