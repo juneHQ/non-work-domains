@@ -1,0 +1,10 @@
+#!/bin/bash
+
+if ! sort -c -u data/domains.txt >/dev/null 2>&1; then
+  echo "Error: domains.txt is not properly sorted or contains duplicates"
+  echo "Please run scripts/sort_and_clean to fix the file"
+  exit 1
+fi
+
+echo "domains.txt is properly sorted and contains no duplicates"
+exit 0
