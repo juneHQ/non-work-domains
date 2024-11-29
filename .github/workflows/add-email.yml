@@ -62,4 +62,4 @@ jobs:
           commit-message: "Add ${{ steps.extract_domain.outputs.domain }}"
           branch: "add-${{ steps.extract_domain.outputs.domain }}"
           title: "Add ${{ steps.extract_domain.outputs.domain }}"
-          body: "This PR adds ${{ steps.extract_domain.outputs.domain }} to data/domains.txt."
+          body: "This PR adds ${{ steps.extract_domain.outputs.domain }} to data/domains.txt. Fixes #${{ github.event.issue.number }}"
