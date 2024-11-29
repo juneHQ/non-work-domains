@@ -2,7 +2,7 @@ name: Add email domain from issue
 
 on:
   issues:
-    types: [opened]
+    types: [labeled]
 
 jobs:
   add-email-domain:
