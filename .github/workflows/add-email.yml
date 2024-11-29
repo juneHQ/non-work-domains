@@ -2,7 +2,7 @@ name: Add email domain from issue
 
 on:
   issues:
-    types: [opened, labeled]
+    types: [opened]
 
 jobs:
   add-email-domain:
@@ -22,10 +22,10 @@ jobs:
       - name: Extract domain from issue
         id: extract_domain
         run: |
-          echo "Issue body:"
-          echo "${{ github.event.issue.body }}"
+          echo "Issue title:"
+          echo "${{ github.event.issue.title }}"
           # Extract domain name from issue body
-          DOMAIN_NAME=$(echo "${{ github.event.issue.body }}" | grep -oE '([A-Za-z0-9.-]+\.[A-Za-z]{2,})' | head -n 1)
+          DOMAIN_NAME=$(echo "${{ github.event.issue.title }}" | grep -oE '([A-Za-z0-9.-]+\.[A-Za-z]{2,})' | head -n 1)
           echo "Domain name extracted: $DOMAIN_NAME"
           echo "::set-output name=domain::$DOMAIN_NAME"
 
@@ -59,6 +59,6 @@ jobs:
         with:
           token: ${{ secrets.GH_PAT }}
           commit-message: "Add $DOMAIN_NAME"
-          branch: "add-$DOMAIN_NAME"
+          branch: "auto-update/add-$DOMAIN_NAME"
           title: "Add $DOMAIN_NAME"
           body: "This PR adds $DOMAIN_NAME to data/domains.txt."
