@@ -1,0 +1,64 @@
+name: Add email domain from issue
+
+on:
+  issues:
+    types: [opened, labeled]
+
+jobs:
+  add-email-domain:
+    runs-on: ubuntu-latest
+    if: ${{ contains(github.event.issue.labels.*.name, 'add-email') }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.GH_PAT }}
+
+      - name: Set up Git configuration
+        run: |
+          git config user.name "JuneHQBot"
+          git config user.email "95219033+JuneHQBot@users.noreply.github.com"
+
+      - name: Extract domain from issue
+        id: extract_domain
+        run: |
+          echo "Issue body:"
+          echo "${{ github.event.issue.body }}"
+          # Extract domain name from issue body
+          DOMAIN_NAME=$(echo "${{ github.event.issue.body }}" | grep -oE '([A-Za-z0-9.-]+\.[A-Za-z]{2,})' | head -n 1)
+          echo "Domain name extracted: $DOMAIN_NAME"
+          echo "::set-output name=domain::$DOMAIN_NAME"
+
+      - name: Validate domain
+        run: |
+          DOMAIN_NAME="${{ steps.extract_domain.outputs.domain }}"
+          if [ -z "$DOMAIN_NAME" ]; then
+            echo "No domain name found in issue body."
+            exit 1
+          fi
+          # Attempt to resolve the domain
+          if ! nslookup "$DOMAIN_NAME"; then
+            echo "Domain $DOMAIN_NAME does not resolve."
+            exit 1
+          fi
+
+      - name: Add domain to domains.txt
+        run: |
+          DOMAIN_NAME="${{ steps.extract_domain.outputs.domain }}"
+          echo "$DOMAIN_NAME" >> data/domains.txt
+          chmod +x scripts/sort_and_clean
+          ./scripts/sort_and_clean
+
+      - name: Commit changes
+        run: |
+          git add data/domains.txt
+          git commit -m "Add $DOMAIN_NAME" || echo "No changes to commit"
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v4
+        with:
+          token: ${{ secrets.GH_PAT }}
+          commit-message: "Add $DOMAIN_NAME"
+          branch: "add-$DOMAIN_NAME"
+          title: "Add $DOMAIN_NAME"
+          body: "This PR adds $DOMAIN_NAME to data/domains.txt."
