@@ -1,6 +1,6 @@
 # Non work domains
 
-This is a list of domains that are not work related.
+This is a list of domains that are not work related. This list includes both temporary and free email domain providers.
 
 We use this list to block non-professional domains from creating new accounts for [June](https://june.so).
 
@@ -30,7 +30,7 @@ end
 
 ## How to contribute
 
-If you have a domain that you think should be added to this list, please open a PR adding it to the `data/domains.txt` file.
+If you have a domain that you think should be added to this list, create a new issue with the domain name in the title and include the `add-email` label. Our GitHub Actions bot will automatically pick it up and create a PR for you. We'll review the PR and merge it if it looks good.
 
 If you have a domain that you think should be removed from this list, please open a PR removing it from the `data/domains.txt` file.
 
